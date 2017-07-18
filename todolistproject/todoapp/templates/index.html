@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <style>
+        body{
+            {% load static %}
+            background-image: url({%static "todoapp/background3.jpg"%});
+            background-size: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: white;
+        }
+    </style>
+</head>
+
+<body ng-app="todoApp" ng-controller="todoControl">
+
+    <h2>My Todo List</h2>
+    
+    <div>
+        <form ng-submit="add()">
+            <input type="text" ng-model="input" size="40" placeholder="what do you want to do ?">
+            <input type="submit" value="Add">
+        </form>
+
+        <br>
+        
+        
+        <div ng-repeat="x in list track by $index">
+            <input type="checkbox" ng-model="x.fields.done"> <span ng-bind="x.fields.activity"></span>
+        </div>
+
+        <p><button ng-click="selectAll()">select all</button>        <button ng-click="delete()">delete selected</button></p>
+    </div>
+        
+    <script>
+        var app = angular.module('todoApp', []); 
+        app.controller('todoControl', function($scope, $http) {
+            $http.get('/index/init').
+                then(function(response){
+                        $scope.list = response.data;
+                     })
+            
+            
+            $scope.add = function() {
+                if($scope.input != ""){
+                    var len = $scope.list.length + 1;
+                    $scope.list.push({ model:'todoapp.todolist', pk:len, fields:{activity:$scope.input, done:false}});
+                    var someObject = {activity:$scope.input, done:false};
+                    
+                    $http.post('/index/post', someObject).
+                        then(function(response){
+                                return response;
+                             });
+                    $scope.input = "";
+                }
+            };
+
+            $scope.delete = function() {
+                var tempList = $scope.list;
+                $scope.list = [];
+                var listToBeSend = [];
+                angular.forEach(tempList, function(x) {
+                    if (!x.fields.done) {
+                        $scope.list.push(x);
+                    }
+                    else{
+                        listToBeSend.push({activity:x.fields.activity});
+                    }
+                });
+
+                console.log(listToBeSend[0]);
+                $http.post('/index/delete', listToBeSend).
+                    then(function(response){
+                        return response;
+                });
+            };
+            
+            $scope.selectAll = function(){
+                var tempList = $scope.list;
+                $scope.list = [];
+                angular.forEach(tempList, function(x){
+                    x.fields.done = true;
+                    $scope.list.push(x);
+                });
+            };
+        });
+</script>
+
+</body>
+</html>
