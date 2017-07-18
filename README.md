@@ -8,9 +8,8 @@ kegiatan itu sudah selesai dilakukan. Pengguna dapat menghapus kegiatan yang sud
 di-checklist, yang otomatis juga akan terhapus di database.
 
 Yang sudah dikerjakan sejauh ini :
-Struktur awal aplikasi untuk django dan pembuatan models.py
-Halaman utama aplikasi sudah selesai
+Aplikasi sudah dapat melakukan pertukaran data dalam bentuk json antara django dan angularjs. 
+Perubahan yang dilakukan pada halaman web akan ikut terjadi pada database.
 
 Yang akan dikerjakan :
-Mengintegrasi django dengan angularjs (pertukaran data dengan json)
-Menambah fitur pada halaman utama
+Membuat unit test untuk django
